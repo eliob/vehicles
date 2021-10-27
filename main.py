@@ -1,13 +1,18 @@
 import pandas as pd
 import download_kaggle_dataset
 import utils
+import modals_predictions
+import warnings
+
+warnings.filterwarnings("ignore")
 
 if __name__ == '__main__':
     download_kaggle_dataset.download_dataset('austinreese/craigslist-carstrucks-data')
     cars = pd.read_csv('data/vehicles.csv')
 
     cars_clean = cars.drop(
-        columns=['url', 'region_url', 'image_url', 'VIN', 'region', 'county', 'lat', 'long', 'posting_date', 'id', 'description']).copy()
+        columns=['url', 'region_url', 'image_url', 'VIN', 'region', 'county', 'lat', 'long', 'posting_date', 'id',
+                 'description']).copy()
 
     column_names = ['manufacturer', 'model', 'size', 'type', 'drive', 'year', 'odometer', 'transmission', 'cylinders',
                     'fuel', 'paint_color', 'condition', 'title_status', 'price', 'state']
@@ -35,8 +40,23 @@ if __name__ == '__main__':
     cars_clean['manufacturer_model'] = cars_clean['manufacturer'] + '@@@' + cars_clean['model']
 
     cars_clean = utils.fill_nan_values(cars_clean)
+    cars_clean = utils.remove_other_and_nan(cars_clean)
 
-    print(cars_clean)
+    final_df = cars_clean.drop(columns=['model', 'paint_color', 'state', 'manufacturer_model']).copy()
+
+    # final_df_knn = utils.convert_final_df_to_knn(final_df)
+
+    print('The Knn prediction is: ', modals_predictions.knn_prediction(final_df, manufacturer='jeep', size=3, v_type='SUV', drive=3,
+                                            year=29, odometer=12.165256, transmission=2, cylinders='6 cylinders',
+                                            fuel=2, condition=4,
+                                            title_status='clean'))
+
+    # final_df_tree = utils.convert_final_knn_to_tree(final_df_knn)
+
+    print('The tree prediction is: ', modals_predictions.tree_prediction(final_df, manufacturer='jeep', size=3, v_type='SUV', drive=3,
+                                            year=29, odometer=12.165256, transmission=2, cylinders='6 cylinders',
+                                            fuel=2, condition=4,
+                                            title_status='clean'))
 
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    print(final_df_tree)

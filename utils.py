@@ -1,4 +1,6 @@
 import pandas as pd
+import transformers
+import numpy as np
 
 
 def fill_nan_values(cars_clean):
@@ -52,9 +54,37 @@ def fill_nan_values(cars_clean):
 
     update_col_name = cars_update.columns
     for col in update_col_name:
-        cars_clean.loc[cars_clean[col] == 'other', col] = cars_clean[cars_clean[col] == 'other']['manufacturer_model']\
-        .map(cars_update[col])
+        cars_clean.loc[cars_clean[col] == 'other', col] = cars_clean[cars_clean[col] == 'other']['manufacturer_model'] \
+            .map(cars_update[col])
 
     return cars_clean
 
 
+def remove_other_and_nan(cars_clean):
+    cars_clean.dropna(
+        subset=['cylinders', 'condition', 'size', 'type', 'transmission', 'drive', 'title_status', 'fuel'],
+        inplace=True)
+
+    for col_name in ['cylinders', 'size', 'type', 'transmission', 'drive', 'fuel']:
+        cars_clean = cars_clean[cars_clean[col_name] != 'other']
+
+    return cars_clean
+
+
+def convert_final_df_to_knn(final_df):
+    final_df_knn = final_df.copy()
+    final_df_knn['price'] = np.log1p(final_df['price'])
+    final_df_knn['odometer'] = np.log1p(final_df['odometer'])
+    final_df_knn['year'] = 2021 - final_df['year']
+    ordinal_columns = ['condition', 'fuel', 'transmission', 'drive', 'size']
+    ordinal_convertor = transformers.ConvertOrdinal(ordinal_columns)
+    ordinal_convertor.fit(final_df_knn).transform(final_df_knn)
+    return final_df_knn
+
+
+def convert_final_df_to_tree(final_df):
+    final_df_tree = convert_final_df_to_knn(final_df)
+    median_columns = ['cylinders', 'manufacturer', 'type', 'title_status']
+    median_convertor = transformers.ConvertMedian(median_columns)
+    median_convertor.fit(final_df_tree).transform(final_df_tree)
+    return final_df_tree
