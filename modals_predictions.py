@@ -95,8 +95,8 @@ def api_knn_prediction(manufacturer, cylinders, title_status, v_type,
     ordinal_convertor = pickle.load(open('pickle/ordinal.pkl', 'rb'))
     X_train = pd.read_pickle("pickle/knn_dataframe.pkl")
 
-    odometer = np.log1p(int(odometer))
-    year = date.today().year - int(year)
+    odometer = np.log1p(odometer)
+    year = date.today().year - year
     size, drive, transmission, fuel, condition = ordinal_convertor.transform(pd.DataFrame({'size': size, 'drive': drive,
                                                                                            'transmission': transmission,
                                                                                            'fuel': fuel,
@@ -124,8 +124,8 @@ def api_tree_prediction(manufacturer, cylinders, title_status, v_type,
     ordinal_convertor = pickle.load(open('pickle/ordinal.pkl', 'rb'))
     median_convertor = pickle.load(open('pickle/median.pkl', 'rb'))
 
-    odometer = np.log1p(int(odometer))
-    year = date.today().year - int(year)
+    odometer = np.log1p(odometer)
+    year = date.today().year - year
     size, drive, transmission, fuel, condition = ordinal_convertor.transform(pd.DataFrame({'size': size, 'drive': drive,
                                                                                            'transmission': transmission,
                                                                                            'fuel': fuel,
@@ -147,8 +147,8 @@ def api_linear_prediction(manufacturer, cylinders, title_status, v_type,
     ordinal_convertor = pickle.load(open('pickle/ordinal.pkl', 'rb'))
     median_convertor = pickle.load(open('pickle/median.pkl', 'rb'))
 
-    odometer = np.log1p(int(odometer))
-    year = date.today().year - int(year)
+    odometer = np.log1p(odometer)
+    year = date.today().year - year
     size, drive, transmission, fuel, condition = ordinal_convertor.transform(pd.DataFrame({'size': size, 'drive': drive,
                                                                                            'transmission': transmission,
                                                                                            'fuel': fuel,

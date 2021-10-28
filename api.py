@@ -143,7 +143,7 @@ class TitleStatus(str, Enum):
 
 
 @app.post('/predict')
-def predict(manufacturer: Manufacturer, size: Size, type: Type, drive: Drive, year, odometer,
+def predict(manufacturer: Manufacturer, size: Size, type: Type, drive: Drive, year: int, odometer: int,
             transmission: Transmission,
             cylinders: Cylinders, fuel: Fuel, condition: Condition, title_status: TitleStatus):
     # result = float(model.predict(array.reshape(1, -1)))
