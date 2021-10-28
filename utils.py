@@ -79,12 +79,12 @@ def convert_final_df_to_knn(final_df):
     ordinal_columns = ['condition', 'fuel', 'transmission', 'drive', 'size']
     ordinal_convertor = transformers.ConvertOrdinal(ordinal_columns)
     ordinal_convertor.fit(final_df_knn).transform(final_df_knn)
-    return final_df_knn
+    return final_df_knn, ordinal_convertor
 
 
 def convert_final_df_to_tree(final_df):
-    final_df_tree = convert_final_df_to_knn(final_df)
+    final_df_tree, ordinal_convertor = convert_final_df_to_knn(final_df)
     median_columns = ['cylinders', 'manufacturer', 'type', 'title_status']
     median_convertor = transformers.ConvertMedian(median_columns)
     median_convertor.fit(final_df_tree).transform(final_df_tree)
-    return final_df_tree
+    return final_df_tree, ordinal_convertor, median_convertor

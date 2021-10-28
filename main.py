@@ -5,6 +5,8 @@ import modals_predictions
 import warnings
 
 warnings.filterwarnings("ignore")
+pd.set_option('display.width', 200)
+pd.set_option('display.max_columns', 40)
 
 if __name__ == '__main__':
     download_kaggle_dataset.download_dataset('austinreese/craigslist-carstrucks-data')
@@ -44,19 +46,23 @@ if __name__ == '__main__':
 
     final_df = cars_clean.drop(columns=['model', 'paint_color', 'state', 'manufacturer_model']).copy()
 
-    # final_df_knn = utils.convert_final_df_to_knn(final_df)
+    print(final_df)
 
-    print('The Knn prediction is: ', modals_predictions.knn_prediction(final_df, manufacturer='jeep', size=3, v_type='SUV', drive=3,
-                                            year=29, odometer=12.165256, transmission=2, cylinders='6 cylinders',
-                                            fuel=2, condition=4,
-                                            title_status='clean'))
+    print('The Knn prediction is: ',
+          modals_predictions.knn_prediction(final_df, manufacturer='jeep', size='mid-size', v_type='SUV', drive='4wd',
+                                            year=1992, odometer=192000, transmission='automatic',
+                                            cylinders='6 cylinders',
+                                            fuel='gas', condition='excellent', title_status='clean'))
 
-    # final_df_tree = utils.convert_final_knn_to_tree(final_df_knn)
+    print('The tree prediction is: ',
+          modals_predictions.tree_prediction(final_df, manufacturer='jeep', size='mid-size', v_type='SUV', drive='4wd',
+                                             year=1992, odometer=192000, transmission='automatic',
+                                             cylinders='6 cylinders',
+                                             fuel='gas', condition='excellent', title_status='clean'))
 
-    print('The tree prediction is: ', modals_predictions.tree_prediction(final_df, manufacturer='jeep', size=3, v_type='SUV', drive=3,
-                                            year=29, odometer=12.165256, transmission=2, cylinders='6 cylinders',
-                                            fuel=2, condition=4,
-                                            title_status='clean'))
-
-
-    print(final_df_tree)
+    print('The Linear prediction is: ',
+          modals_predictions.linear_prediction(final_df, manufacturer='jeep', size='mid-size', v_type='SUV',
+                                               drive='4wd',
+                                               year=1992, odometer=192000, transmission='automatic',
+                                               cylinders='6 cylinders',
+                                               fuel='gas', condition='excellent', title_status='clean'))
