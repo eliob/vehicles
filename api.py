@@ -4,6 +4,11 @@ from enum import Enum
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 
+import modals_predictions
+import warnings
+
+warnings.filterwarnings("ignore")
+
 app = FastAPI(
     title="Craig's list used cars prediction",
     description='Predict the price of a Car',
@@ -91,7 +96,7 @@ class Type(str, Enum):
 
 class Drive(str, Enum):
     rwd = 'rwd'
-    wd = 'wd'
+    wd4 = '4wd'
     fwd = 'fwd'
 
 
@@ -138,11 +143,27 @@ class TitleStatus(str, Enum):
 
 
 @app.post('/predict')
-def predict(manufacturer: Manufacturer, size: Size, type: Type, drive: Drive, year, odometer, transmission: Transmission,
+def predict(manufacturer: Manufacturer, size: Size, type: Type, drive: Drive, year, odometer,
+            transmission: Transmission,
             cylinders: Cylinders, fuel: Fuel, condition: Condition, title_status: TitleStatus):
     # result = float(model.predict(array.reshape(1, -1)))
 
-    result = {'Knn_prediction': manufacturer, 'Tree prediction': cylinders, 'Linear prediction': 3000}
+    knn_prediction = modals_predictions.api_knn_prediction(manufacturer=manufacturer, size=size, v_type=type,
+                                                           drive=drive, year=year, odometer=odometer,
+                                                           transmission=transmission, cylinders=cylinders,
+                                                           fuel=fuel, condition=condition, title_status=title_status)
+    tree_prediction = modals_predictions.api_tree_prediction(manufacturer=manufacturer, size=size, v_type=type,
+                                                             drive=drive, year=year, odometer=odometer,
+                                                             transmission=transmission, cylinders=cylinders,
+                                                             fuel=fuel, condition=condition, title_status=title_status)
+    linear_prediction = modals_predictions.api_linear_prediction(manufacturer=manufacturer, size=size, v_type=type,
+                                                                 drive=drive, year=year, odometer=odometer,
+                                                                 transmission=transmission, cylinders=cylinders,
+                                                                 fuel=fuel, condition=condition,
+                                                                 title_status=title_status)
+
+    result = {'Knn_prediction': knn_prediction, 'Tree prediction': tree_prediction,
+              'Linear prediction': linear_prediction}
     return JSONResponse(content=result)
 
 
