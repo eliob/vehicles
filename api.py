@@ -1,5 +1,6 @@
 import uvicorn
 import nest_asyncio
+from enum import Enum
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 
@@ -20,11 +21,128 @@ def _index():
     return JSONResponse(response)
 
 
-@app.post('/amir')
-def amir(par1):
+class Manufacturer(str, Enum):
+    gmc = "gmc"
+    chevrolet = "chevrolet"
+    toyota = "toyota"
+    ford = "ford"
+    jeep = "jeep"
+    nissan = "nissan"
+    ram = "ram"
+    mazda = "mazda"
+    cadillac = "cadillac"
+    honda = "honda"
+    dodge = "dodge"
+    lexus = "lexus"
+    jaguar = "jaguar"
+    buick = "buick"
+    chrysler = "chrysler"
+    volvo = "volvo"
+    audi = "audi"
+    infiniti = "infiniti"
+    lincoln = "lincoln"
+    alfa_romeo = "alfa-romeo"
+    subaru = "subaru"
+    acura = "acura"
+    hyundai = "hyundai"
+    mercedes_benz = "mercedes-benz"
+    bmw = "bmw"
+    mitsubishi = "mitsubishi"
+    volkswagen = "volkswagen"
+    porsche = "porsche"
+    kia = "kia"
+    rover = "rover"
+    ferrari = "ferrari"
+    mini = "mini"
+    pontiac = "pontiac"
+    fiat = "fiat"
+    tesla = "tesla"
+    saturn = "saturn"
+    mercury = "mercury"
+    harley_davidson = "harley-davidson"
+    datsun = "datsun"
+    aston_martin = "aston-martin"
+    landrover = "land rover"
+    morgan = "morgan"
+
+
+class Size(str, Enum):
+    full_size = 'full-size'
+    mid_size = 'mid-size'
+    compact = 'compact'
+    sub_compact = 'sub-compact'
+
+
+class Type(str, Enum):
+    pickup = "pickup"
+    truck = "truck"
+    other = "other"
+    coupe = "coupe"
+    SUV = "SUV"
+    hatchback = "hatchback"
+    mini_van = "mini-van"
+    sedan = "sedan"
+    offroad = "offroad"
+    bus = "bus"
+    van = "van"
+    convertible = "convertible"
+    wagon = "wagon"
+
+
+class Drive(str, Enum):
+    rwd = 'rwd'
+    wd = 'wd'
+    fwd = 'fwd'
+
+
+class Transmission(str, Enum):
+    other = 'other'
+    automatic = 'automatic'
+    manual = 'manual'
+
+
+class Cylinders(str, Enum):
+    cylinders8 = "8 cylinders"
+    cylinders6 = "6 cylinders"
+    cylinders4 = "4 cylinders"
+    cylinders5 = "5 cylinders"
+    cylinders3 = "3 cylinders"
+    cylinders10 = "10 cylinders"
+    cylinders12 = "12 cylinders"
+
+
+class Fuel(str, Enum):
+    gas = 'gas'
+    other = 'other'
+    diesel = 'diesel'
+    hybrid = 'hybrid'
+    electric = 'electric'
+
+
+class Condition(str, Enum):
+    good = "good"
+    excellent = "excellent"
+    fair = "fair"
+    like_new = "like new"
+    new = "new"
+    salvage = "salvage"
+
+
+class TitleStatus(str, Enum):
+    clean = "clean"
+    rebuilt = "rebuilt"
+    lien = "lien"
+    salvage = "salvage"
+    missing = "missing"
+    parts_only = "parts only"
+
+
+@app.post('/predict')
+def predict(manufacturer: Manufacturer, size: Size, type: Type, drive: Drive, year, odometer, transmission: Transmission,
+            cylinders: Cylinders, fuel: Fuel, condition: Condition, title_status: TitleStatus):
     # result = float(model.predict(array.reshape(1, -1)))
 
-    result = {'res1': 123, 'res2': 456, 'res3': 789}
+    result = {'Knn_prediction': manufacturer, 'Tree prediction': cylinders, 'Linear prediction': 3000}
     return JSONResponse(content=result)
 
 
